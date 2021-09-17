@@ -8,14 +8,17 @@ let Port = function(){//wrapper
     
     let Response = function(port,msg){
         this.send = function(body){
+            console.log(msg);
             port.postMessage({body,id:msg.id});
         };
     };
     
     let handleGET = function(port,msg){
+        let pname = port.name;
+        console.log(gets,pname);
         if(pname in gets){
             gets[pname].map(cb=>{
-                let response = new Response(port);
+                let response = new Response(port,msg);
                 cb(msg,response);
             });
         }else{
@@ -24,6 +27,7 @@ let Port = function(){//wrapper
     };
     
     let handlePOST = function(port,msg){
+        let pname = port.name;
         if(pname in posts){
             posts[pname].map(cb=>{
                 cb(msg);
@@ -62,14 +66,14 @@ let Port = function(){//wrapper
     });
     
     this.get = function(pname,cb){
-        if(pname in gets){
+        if(!(pname in gets)){
             gets[pname] = [];
         }
         gets[pname].push(cb);
     };
     
     this.post = function(pname,cb){
-        if(pname in posts){
+        if(!(pname in posts)){
             posts[pname] = [];
         }
         posts[pname].push(cb);
@@ -77,7 +81,7 @@ let Port = function(){//wrapper
     
     this.broadcast = function(pname,body){
         if(pname in ports){
-            ports[pname].map(p=>p.postMessage({body,id:-1});)
+            ports[pname].map(p=>p.postMessage({body,id:-1}));
         }else{
             console.log("no ports are listening to the broadcast");
         }

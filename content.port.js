@@ -10,7 +10,8 @@ let Port = function(){//wrapper
             //create a new port
             let port;
             try{
-                let port = chrome.runtime.connect({name:"wordgame-port"});
+                port = chrome.runtime.connect({name:pname});
+                console.log(port);
                 port.onMessage.addListener(function(msg) {
                     let changed = false;
                     if(pname in listeners){//persistent listeners

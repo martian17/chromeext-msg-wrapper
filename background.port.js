@@ -58,10 +58,11 @@ let Port = function(){//wrapper
             for(let i = 0; i < ports.length; i++){
                 if(ports[i] === port){
                     ports.splice(i,1);
+                    console.log("port disconnected: ",pname,port);
                     return;
                 }
             }
-            console.log("error, no port to be deleted",ports,port);
+            console.log("error, no port to be disconnected",pname,ports,port);
         });
     });
     

@@ -31,6 +31,10 @@ let Port = function(){//wrapper
                         console.log("Warning: no one listened to msg: ",msg);
                     }
                 });
+                port.onDisconnect.addListener("close",function(){
+                    console.log("disconnected: "+port.name);
+                    delete ports[pname];
+                });
             }catch(err){
                 rej(err);
                 return;

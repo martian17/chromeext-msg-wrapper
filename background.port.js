@@ -53,7 +53,6 @@ let Port = function(){//wrapper
             }
         });
         port.onDisconnect.addListener(function(port){
-            let ports = ports[pname];
             //searching for the port
             for(let i = 0; i < ports.length; i++){
                 if(ports[i] === port){

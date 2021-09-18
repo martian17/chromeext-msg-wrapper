@@ -36,7 +36,7 @@ let Port = function(){//wrapper
                     delete ports[pname];
                 });
             }catch(err){
-                rej(err);
+                console.log(err);
                 return;
             }
             ports[pname] = port;

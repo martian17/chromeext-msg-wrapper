@@ -56,6 +56,9 @@ let Port = function(){//wrapper
                             that.post(pname,msg.body);
                         }
                     }
+                    if(pname in listeners){
+                        getPort(pname);
+                    }
                 });
                 queued[pname] = {};
             }catch(err){

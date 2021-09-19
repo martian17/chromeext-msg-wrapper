@@ -66,8 +66,10 @@ let Port = function(){//wrapper
     
     this.get = function(pname,content){
         return new Promise((res,rej)=>{
+            let id = ID++;
+            let msg;
             try{
-                let msg = {body:content, id:ID, type:GET};
+                msg = {body:content, id:id, type:GET};
                 getPort(pname).postMessage(msg);
             }catch(err){
                 rej(err);

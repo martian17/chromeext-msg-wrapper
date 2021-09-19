@@ -41,7 +41,7 @@ let Port = function(){//wrapper
                     }
                     delete ports[pname];
                     let queued_p = queued[pname];
-                    delete queued[panme];
+                    delete queued[pname];
                     for(let id in queued_p){
                         [res,rej,msg] = queued_p[id];
                         if(msg.type === GET){

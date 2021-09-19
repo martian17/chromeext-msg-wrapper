@@ -54,14 +54,22 @@ let Port = function(){//wrapper
         });
         port.onDisconnect.addListener(function(port){
             //searching for the port
-            for(let i = 0; i < ports.length; i++){
-                if(ports[i] === port){
-                    ports.splice(i,1);
-                    console.log("port disconnected: ",pname,port);
-                    return;
-                }
+            let pname = port.name;
+            if(!(pname in ports)){
+                console.log("no matching port found",pname,ports,port);
+                return false;
             }
-            console.log("error, no port to be disconnected",pname,ports,port);
+            let portv = ports[pname];
+            let idx = portv.indexOf(port);
+            if(idx === -1){
+                console.log("no matching port found within portv",pname,ports,port);
+                return false;
+            }
+            //and delete it
+            portv.splice(idx,1);
+            if(portv.length === 0){
+                delete ports[pname];
+            }
         });
     });
     

@@ -34,8 +34,11 @@ let Port = function(){//wrapper
                         console.log("Warning: no one listened to msg: ",msg);
                     }
                 });
-                port.onDisconnect.addListener("close",function(){
+                port.onDisconnect.addListener(function(p){
                     console.log("disconnected: "+port.name);
+                    if(p.error){
+                        console.log("Disconnected due to an error: ",p.error);
+                    }
                     delete ports[pname];
                     let queued_p = queued[pname];
                     delete queued[panme];

@@ -2,6 +2,7 @@ let Port = function(){//wrapper
     const GET = 1;
     const POST = 0;
     let ID = 0;//unique id per message
+    let that = this;
     let queued = {};
     let ports = {};
     let listeners = {};
@@ -18,12 +19,14 @@ let Port = function(){//wrapper
                         listeners[pname].map(l=>l(msg.body));
                         changed = true;
                     }
-                    if(msg.id in queued){
+                    let queued_p = queued[pname];//queued port
+                    if(msg.id in queued_p){
                         if(msg.err){
-                            queued[msg.id][1](msg.err);
+                            queued_p[msg.id][1](msg.err);
                         }else{
-                            queued[msg.id][0](msg.body);
+                            queued_p[msg.id][0](msg.body);
                         }
+                        delete queued_p[msg.id];
                         changed = true;
                     }
                     if(!changed){
@@ -34,7 +37,24 @@ let Port = function(){//wrapper
                 port.onDisconnect.addListener("close",function(){
                     console.log("disconnected: "+port.name);
                     delete ports[pname];
+                    let queued_p = queued[pname];
+                    delete queued[panme];
+                    for(let id in queued_p){
+                        [res,rej,msg] = queued_p[id];
+                        if(msg.type === GET){
+                            try{
+                                let result = that.get(pname,msg.body);
+                                res(result);
+                            }catch(err){
+                                rej(err);
+                            }
+                        }else if(msg.type === POST){//never happens in theory, but can't hurt to future proof
+                            console.log("post in queue",msg);
+                            that.post(pname,msg.body);
+                        }
+                    }
                 });
+                queued[pname] = {};
             }catch(err){
                 console.log(err);
                 return;
@@ -47,12 +67,13 @@ let Port = function(){//wrapper
     this.get = function(pname,content){
         return new Promise((res,rej)=>{
             try{
-                getPort(pname).postMessage({body:content, id:ID, type:GET});
+                let msg = {body:content, id:ID, type:GET};
+                getPort(pname).postMessage(msg);
             }catch(err){
                 rej(err);
                 return;
             }
-            queued[ID] = [res,rej];//port sending successful
+            queued[pname][id] = [res,rej,msg];//adding it to the queue
         });
     };
     this.post = function(pname,content){

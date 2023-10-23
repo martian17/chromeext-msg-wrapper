@@ -1,0 +1,16 @@
+{
+  "name": "chromeext-msg-wrapper",
+  "type": "module",
+  "version": "1.0.0",
+  "exports": {
+      "./content": "./content.port.js"
+      "./background": "./background.port.js"
+  },
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,4 +1,4 @@
-let Port = function(){//wrapper
+export const Port = function(){//wrapper
     const GET = 1;
     const POST = 0;
     let ID = 0;//unique id per message
